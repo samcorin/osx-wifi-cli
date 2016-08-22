@@ -4,54 +4,45 @@
   "description": "A command line tool for managing wifi connection in osx",
   "keywords": [
     "osx",
+    "darwin",
     "wifi",
     "cli",
     "mac",
     "wireless",
     "network"
   ],
+  "license": "MIT",
   "homepage": "https://github.com/danyshaanan/osx-wifi-cli",
-  "author": {
-    "name": "Dany Shaanan",
-    "email": "danyshaanan@gmail.com",
-    "url": "http://danyshaanan.com/"
-  },
+  "repository": "danyshaanan/osx-wifi-cli",
+  "bugs": "https://github.com/danyshaanan/osx-wifi-cli/issues",
+  "author": "Dany Shaanan <danyshaanan@gmail.com> (http://danyshaanan.com)",
   "os": [
     "darwin"
   ],
-  "contributors": [],
-  "license": "MIT",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/danyshaanan/osx-wifi-cli/blob/master/LICENSE"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/danyshaanan/osx-wifi-cli.git"
+  "engines": {
+    "node": ">=6.0.0"
   },
-  "bugs": {
-    "url": "https://github.com/danyshaanan/osx-wifi-cli/issues",
-    "email": "danyshaanan@gmail.com"
-  },
+  "engine-strict": true,
   "preferGlobal": true,
-  "scripts": {
-    "lint": "eslint .",
-    "test": "npm run lint",
-    "start": "npm test"
-  },
   "bin": {
     "osx-wifi-cli": "./osx-wifi-cli.js"
   },
-  "dependencies": {
-    "commander": "2.1.0",
-    "q": "1.0.0"
+  "scripts": {
+    "lint": "eslint .",
+    "ava": "ava src/test/**/*.spec.js",
+    "watch": "npm run ava -- --watch ",
+    "check": "npm-check -u",
+    "test": "npm run lint && npm run ava",
+    "start": "npm test"
   },
+  "dependencies": {},
   "devDependencies": {
-    "eslint": "2.7.0",
-    "eslint-config-standard": "5.1.0",
-    "eslint-plugin-promise": "1.1.0",
-    "eslint-plugin-standard": "1.3.2"
+    "ava": "0.16.0",
+    "babel-eslint": "6.1.2",
+    "eslint": "3.3.1",
+    "eslint-config-standard": "6.0.0-beta.3",
+    "eslint-plugin-promise": "2.0.1",
+    "eslint-plugin-standard": "2.0.0",
+    "npm-check": "5.2.3"
   }
 }

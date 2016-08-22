@@ -1,0 +1,14 @@
+
+  osx-wifi-cli vVERSION
+
+  Usage: osx-wifi-cli [on | off | restart | scan | <network> <password>]
+
+  Options:
+
+    version, -v         output version number
+    help, -h            output usage information
+    on                  turn wifi on
+    off                 turn wifi off
+    restart             restart wifi
+    scan                show available networks
+    --device <device>   set device (defaults to en0)

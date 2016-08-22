@@ -2,79 +2,25 @@
 
 'use strict'
 
-var Q = require('q')
-var cli = require('commander')
-var exec = require('child_process').exec
-var version = require('./package.json').version
+const lib = require(`./src/main/lib.js`)
 
-cli
-  .version(version)
-  .usage('[on | off | restart | scan | <network> <password>]')
-  .option('on', 'turn wifi on')
-  .option('off', 'turn wifi off')
-  .option('restart', 'restart wifi')
-  .option('scan', 'show available networks')
-  .option('--device <device>', 'set device (default is en0)') // see ugly todo below.
-  .parse(process.argv)
+const help = _ => console.log(lib.helpText())
+const commands = lib.getCommands(process.platform)
+const { args, device } = lib.getInput(process.argv.slice(2))
+const execute = lib.executeOnDevice.bind(null, device)
 
-var commands = {
-  osx: {
-    on: 'networksetup -setairportpower en0 on',
-    off: 'networksetup -setairportpower en0 off',
-    scan: '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport scan',
-    connect: 'networksetup -setairportnetwork en0 "NETWORK_TOKEN" "PASSWORD_TOKEN"',
-    currentNetwork: '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I | grep -e "\\bSSID:" | sed -e "s/^.*SSID: //"'
-  }
+const oneWordActions = {
+  on: _ => execute(commands.on),
+  off: _ => execute(commands.off),
+  restart: _ => execute(`${commands.off} && ${commands.on}`),
+  scan: _ => execute(commands.scan),
+  version: _ => console.log(`osx-wifi-cli version ${lib.getVersion()}`)
 }
 
-var utils = commands.osx // If implementing other OSs, this is the place to check which we're on.
-
-var args = process.argv.slice(2)
-
-// This is very ugly!! TODO: check how to combine flags and "commands" properly. maybe use 'npm i cli'.
-if (cli.device) {
-  Object.keys(utils).forEach(function(key) {
-    if (typeof utils[key] === 'string') {
-      utils[key] = utils[key].replace('en0', cli.device)
-    }
-  })
-  args.splice(args.indexOf('--device'), 2)
+const actionByNumOfArgs = {
+  0: _ => execute(commands.currentNetwork, lib.status),
+  1: _ => (oneWordActions[args[0]] || help)(),
+  2: _ => execute(lib.parseConnectCommand(commands.connect, ...args))
 }
 
-if (args[0] === 'on') {
-  execute(utils.on) // cli.on is a function
-} else if (cli.off) {
-  execute(utils.off)
-} else if (cli.restart) {
-  execute(utils.off).then(execute.bind(this, utils.on))
-} else if (cli.scan) {
-  execute(utils.scan).then(console.log.bind(console))
-} else if (args.length === 2) {
-  execute(utils.connect.replace('NETWORK_TOKEN', args[0]).replace('PASSWORD_TOKEN', args[1]))
-} else if (args.length === 0) {
-  execute(utils.currentNetwork).then(help)
-} else {
-  cli.help()
-}
-
-// -----------------------------------------------------------------------------
-
-function help(SSID) {
-  console.log(SSID.trim() ? 'you are connected to ' + SSID : 'you are not connected anywhere')
-  // TODO: add more help text
-}
-
-function execute(cmd) {
-  // console.log('executing command:', cmd)
-  var deferred = Q.defer()
-  exec(cmd, function(err, strout, strerr) {
-    if (err) {
-      deferred.reject(new Error(err))
-    } else if (strerr) {
-      deferred.reject(new Error(strerr))
-    } else {
-      deferred.resolve(strout)
-    }
-  })
-  return deferred.promise
-}
+;(actionByNumOfArgs[args.length] || help)()

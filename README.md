@@ -34,4 +34,3 @@ $ npm install -g osx-wifi-cli
 * If you enjoyed this package, please star it [on Github](https://github.com/danyshaanan/osx-wifi-cli).
 * You are invited to [Open an issue on Github](https://github.com/danyshaanan/osx-wifi-cli/issues).
 * For other matters, my email address can be found on my [NpmJS page](https://www.npmjs.org/~danyshaanan), my [Github page](https://github.com/danyshaanan), or my [website](http://danyshaanan.com/).
-

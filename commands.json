@@ -1,0 +1,9 @@
+{
+  "darwin": {
+    "on": "networksetup -setairportpower DEVICE on",
+    "off": "networksetup -setairportpower DEVICE off",
+    "scan": "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport scan",
+    "connect": "networksetup -setairportnetwork DEVICE 'NETWORK' 'PASSWORD'",
+    "currentNetwork": "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I | sed -n 's/ SSID: \\(.*\\)$/\\1/p'"
+  }
+}
